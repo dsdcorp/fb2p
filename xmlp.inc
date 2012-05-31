@@ -442,7 +442,7 @@ function xmlp_data2struct($data, $config=false) {
      'strip_comments'=>false,
      'tags_hash'=>false,
   ));
-  if ($config['unknown_tags_processing']==XMLP_UT_LEAVE) $config['tags_hash']=false;
+//  if ($config['unknown_tags_processing']==XMLP_UT_LEAVE) $config['tags_hash']=false;
   
 xmlp_memreport('xmlp_data2struct 1');
   if (!$config['struct_only']) {
@@ -584,7 +584,7 @@ function xmlp_data2struct_old($data, $config=false) {
      'strip_comments'=>false,
      'tags_hash'=>false,
   ));
-  if ($config['unknown_tags_processing']==XMLP_UT_LEAVE) $config['tags_hash']=false;
+//  if ($config['unknown_tags_processing']==XMLP_UT_LEAVE) $config['tags_hash']=false;
 xmlp_memreport('xmlp_data2struct_old 1');
   $tags=array();
   $r=preg_match_all('/'.xmlp_get_tag_pattern($config['tags_processing']).'/is', $data, $tags, PREG_OFFSET_CAPTURE | PREG_SET_ORDER, 0);
