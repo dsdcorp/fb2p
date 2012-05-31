@@ -300,7 +300,7 @@ function xmlp_get_tag_attributes($tag_text) {
   return $attr;
 }
 
-function xmlp_parse_tag_match_old($match, $key=-1, $tags_hash=false) {
+function xmlp_parse_tag_match_old($match, $key=-1, $tags_hash=false, $fix_known_tag_types=false) {
    $tag=array();
 
    if ($key>=0) $tag['ind']=$key;
@@ -334,6 +334,8 @@ function xmlp_parse_tag_match_old($match, $key=-1, $tags_hash=false) {
      $tag['type']=XMLP_TT_XML;
    } else $tag['type']=XMLP_TT_OPEN;
 
+   if ($fix_known_tag_types && !is_bool($tag['known']) && $tag['type']!=XMLP_TT_CLOSE) $tag['type']=$tag['known'];
+
    if ($match[3][1]>0) {
      if ($tag['type']==XMLP_TT_SPECIAL) {
         $tag['attributes']=$match[3][0];
@@ -346,7 +348,7 @@ function xmlp_parse_tag_match_old($match, $key=-1, $tags_hash=false) {
    return $tag;
 }
 
-function xmlp_parse_tag_match($match, $key=-1, $tags_hash=false) {
+function xmlp_parse_tag_match($match, $key=-1, $tags_hash=false, $fix_known_tag_types=false) {
    $tag=array();
    if ($key>=0) $tag['ind']=$key;
    if (count($match)==1) {
@@ -371,6 +373,8 @@ function xmlp_parse_tag_match($match, $key=-1, $tags_hash=false) {
    } else if ($match[1]=='?' && $match[4]=='?') {
      $tag['type']=XMLP_TT_XML;
    } else $tag['type']=XMLP_TT_OPEN;
+
+   if ($fix_known_tag_types && !is_bool($tag['known']) && $tag['type']!=XMLP_TT_CLOSE) $tag['type']=$tag['known'];
 
    if (isset($match[3]{1})) {
      if ($tag['type']==XMLP_TT_SPECIAL) {
@@ -441,6 +445,7 @@ function xmlp_data2struct($data, $config=false) {
      'tags_processing'=>false,
      'strip_comments'=>false,
      'tags_hash'=>false,
+     'fix_known_tag_types'=>false,
   ));
 //  if ($config['unknown_tags_processing']==XMLP_UT_LEAVE) $config['tags_hash']=false;
   
@@ -481,7 +486,7 @@ xmlp_memreport('xmlp_data2struct 2');
   $i=0;
   for ($i=0;$i<$tlen;$i++) {
     $ut_plain=$tags[$i][0];
-    $tags[$i]=xmlp_parse_tag_match($tags[$i], $i, $config['tags_hash']); //continue;
+    $tags[$i]=xmlp_parse_tag_match($tags[$i], $i, $config['tags_hash'], $config['fix_known_tag_types']); //continue;
     if ($comment_processing) {
       if ($tags[$i]['name']=='--') {
          if ($tags[$i]['type']!=XMLP_TT_CLOSE) continue;
@@ -583,6 +588,7 @@ function xmlp_data2struct_old($data, $config=false) {
      'tags_processing'=>false,
      'strip_comments'=>false,
      'tags_hash'=>false,
+     'fix_known_tag_types'=>false,
   ));
 //  if ($config['unknown_tags_processing']==XMLP_UT_LEAVE) $config['tags_hash']=false;
 xmlp_memreport('xmlp_data2struct_old 1');
@@ -613,7 +619,7 @@ xmlp_memreport('xmlp_data2struct_old 2');
 
   for ($i=0;$i<$tlen;$i++) {
     $ut_plain=$tags[$i][0][0];
-    $tags[$i] = xmlp_parse_tag_match_old($tags[$i], $i, $config['tags_hash']); //continue;
+    $tags[$i] = xmlp_parse_tag_match_old($tags[$i], $i, $config['tags_hash'], $config['fix_known_tag_types']); //continue;
     if ($comment_processing) {
       if ($tags[$i]['name']=='--') {
          if ($tags[$i]['type']!=XMLP_TT_CLOSE) continue;

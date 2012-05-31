@@ -34,6 +34,7 @@ $GLOBALS['process_config']=array(
                                  'unknown_tags_processing'=>XMLP_UT_CUT,
                                  'strip_comments'=>false,
                                  'tags_hash'=>$GLOBALS['XMLP_FB2_elements'],
+                                 'fix_known_tag_types'=>true,
                                  'tags_processing'=>array(
                                      'name_first_alpha'=>false,
                                      'name_len'=>20,
