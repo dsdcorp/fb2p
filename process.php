@@ -141,9 +141,9 @@ function do_file_parse($fname, $data) {
   $lre_id=(int)$matches[1];
   if ($lre_id==0) $lre_id='FALSE';
 //  print_log_str($out_file, 'ID: '.$lre_id);
-xmlp_memreport($fname);
+xmlp_memreport($fname);            
 
-     $struct=xmlp_data2struct_old($data, $GLOBALS['process_config']);
+     $struct=xmlp_data2struct_with_offset($data, $GLOBALS['process_config']);
 
 xmlp_memreport($fname);
 //     return false;

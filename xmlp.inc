@@ -300,7 +300,7 @@ function xmlp_get_tag_attributes($tag_text) {
   return $attr;
 }
 
-function xmlp_parse_tag_match_old($match, $key=-1, $tags_hash=false, $fix_known_tag_types=false) {
+function xmlp_parse_tag_match_with_offset($match, $key=-1, $tags_hash=false, $fix_known_tag_types=false) {
    $tag=array();
 
    if ($key>=0) $tag['ind']=$key;
@@ -390,13 +390,13 @@ function xmlp_parse_tag_match($match, $key=-1, $tags_hash=false, $fix_known_tag_
 
 function xmlp_get_tags($data, $offset=0) {
    $r=preg_match_all('/'.xmlp_get_tag_pattern().'/is', $data, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER, $offset);
-   if ($r && $r>0) array_walk($matches, create_function('&$item, $key','$item = xmlp_parse_tag_match_old($item, $key);'));
+   if ($r && $r>0) array_walk($matches, create_function('&$item, $key','$item = xmlp_parse_tag_match_with_offset($item, $key);'));
    return $matches;
 }
 
 function xmlp_get_tag($data, $offset=0) {
    if (!preg_match('/'.xmlp_get_tag_pattern().'/is', $data, $matches, PREG_OFFSET_CAPTURE, $offset)) return false;
-   return xmlp_parse_tag_match_old($matches);
+   return xmlp_parse_tag_match_with_offset($matches);
 }
 
 function xmlp_ent_dec_str($s) {
@@ -581,7 +581,7 @@ xmlp_memreport('xmlp_data2struct 3');
   return array($res, $errors);
 }
 
-function xmlp_data2struct_old($data, $config=false) {
+function xmlp_data2struct_with_offset($data, $config=false) {
   $config=xmlp_config($config, array(
      'struct_only'=>false,
      'unknown_tags_processing'=>XMLP_UT_LEAVE,
@@ -591,11 +591,11 @@ function xmlp_data2struct_old($data, $config=false) {
      'fix_known_tag_types'=>false,
   ));
 //  if ($config['unknown_tags_processing']==XMLP_UT_LEAVE) $config['tags_hash']=false;
-xmlp_memreport('xmlp_data2struct_old 1');
+xmlp_memreport('xmlp_data2struct_with_offset 1');
   $tags=array();
   $r=preg_match_all('/'.xmlp_get_tag_pattern($config['tags_processing']).'/is', $data, $tags, PREG_OFFSET_CAPTURE | PREG_SET_ORDER, 0);
   if ($r==false || $r<=0) return false;
-xmlp_memreport('xmlp_data2struct_old 2');
+xmlp_memreport('xmlp_data2struct_with_offset 2');
 //  return $tags;
 
   // main cycle
@@ -619,7 +619,7 @@ xmlp_memreport('xmlp_data2struct_old 2');
 
   for ($i=0;$i<$tlen;$i++) {
     $ut_plain=$tags[$i][0][0];
-    $tags[$i] = xmlp_parse_tag_match_old($tags[$i], $i, $config['tags_hash'], $config['fix_known_tag_types']); //continue;
+    $tags[$i] = xmlp_parse_tag_match_with_offset($tags[$i], $i, $config['tags_hash'], $config['fix_known_tag_types']); //continue;
     if ($comment_processing) {
       if ($tags[$i]['name']=='--') {
          if ($tags[$i]['type']!=XMLP_TT_CLOSE) continue;
@@ -719,7 +719,7 @@ xmlp_memreport('xmlp_data2struct_old 2');
      'data'=>$parent_stack,
   );
                   
-xmlp_memreport('xmlp_data2struct_old 3');
+xmlp_memreport('xmlp_data2struct_with_offset 3');
   if (count($errors)==0) $errors=false;
   return array($res, $errors);
 }

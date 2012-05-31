@@ -52,7 +52,7 @@ function progress_fmt_time($timeval, $in_float=false) {
    $r_min=(int)($timeval/$pdata['si_min']); $timeval=$timeval-($r_min*$pdata['si_min']);
    $r_sec=$timeval;
    $tf_str='%02d:%02d:%02d';
-   if ($in_float) $tf_str='%02d:%02d:%06.3f';
+   if ($in_float) $tf_str='%02d:%02d:%06.6f';
    $result=sprintf($tf_str, $r_hour, $r_min, $r_sec);
    if ($r_day>0) $result=$r_day.'d '.$result;
    if ($r_mon>0) $result=$r_mon.'m '.$result;

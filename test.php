@@ -29,34 +29,34 @@ $process_config=array(
                        ),
                      );
 
-print("parsing struct_old... ");
+print("parsing struct_with_offset... ");
 progress_start(1); memreport(1);
-$book_old=xmlp_data2struct_old($fdata, $process_config);
+$book_with_offset=xmlp_data2struct_with_offset($fdata, $process_config);
 progress_end(true);  memreport(2);
 print("OK\n");
-if ($book_old[1]) {
+if ($book_with_offset[1]) {
   fprintf(STDERR, "XML parser errors [".$in_fname."]:old\n");
-  foreach($book_old[1] as $err) {
+  foreach($book_with_offset[1] as $err) {
     fprintf(STDERR, $err['description'].', '.var_export($err['data'], true));
   }
 }
-print("saving struct_old... ");
-@file_put_contents('out_1_struct_old.txt', var_export($book_old, true));
+print("saving struct_with_offset... ");
+@file_put_contents('out_1_struct_with_offset.txt', var_export($book_with_offset, true));
 print("OK\n");
 
-print("compiling struct_old... ");  memreport(3);
-//$out_data_old=xmlp_struct2data($book_old[0]);
-$out_data_old=array(); xmlp_compile_struct($book_old[0], $out_data_old); $out_data_old=implode('',$out_data_old); //$out_data_old=var_export($out_data_old, true);
+print("compiling struct_with_offset... ");  memreport(3);
+//$out_data_with_offset=xmlp_struct2data($book_with_offset[0]);
+$out_data_with_offset=array(); xmlp_compile_struct($book_with_offset[0], $out_data_with_offset); $out_data_with_offset=implode('',$out_data_with_offset); //$out_data_with_offset=var_export($out_data_with_offset, true);
 print("OK\n");  memreport(4);
-print("saving out_old... ");
-@file_put_contents('out_2_data_old.txt', $out_data_old);
+print("saving out_with_offset... ");
+@file_put_contents('out_2_data_with_offset.txt', $out_data_with_offset);
 print("OK\n");
 
-print("getting col_old... ");
-$col_old=xmlp_struct2book($book_old[0]);
+print("getting col_with_offset... ");
+$col_with_offset=xmlp_struct2book($book_with_offset[0]);
 print("OK\n");
-print("saving col_old... ");
-@file_put_contents('out_3_book_old.txt', var_export($col_old, true));
+print("saving col_with_offset... ");
+@file_put_contents('out_3_book_with_offset.txt', var_export($col_with_offset, true));
 print("OK\n");
 
 
